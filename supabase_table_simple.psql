@@ -1,0 +1,63 @@
+-- Simplified Supabase Table Creation Script
+-- Run each section separately in your Supabase SQL Editor
+
+-- Step 1: Create the main table
+CREATE TABLE IF NOT EXISTS pitch_decks (
+    id UUID PRIMARY KEY,
+    pitch_deck_link TEXT NOT NULL,
+    funds_list_link TEXT NOT NULL,
+    original_filename TEXT,
+    workflow_type TEXT DEFAULT 'pitch_deck',
+    company_name TEXT,
+    description TEXT,
+    problem TEXT,
+    solution TEXT,
+    funding_info TEXT,
+    industry_sectors TEXT,
+    pages_processed INTEGER DEFAULT 0,
+    text_extracted_chars INTEGER DEFAULT 0,
+    total_funds INTEGER DEFAULT 0,
+    funds_data JSONB,
+    extracted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    raw_summary JSONB,
+    status TEXT DEFAULT 'completed',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Step 2: Create basic indexes (run after table creation)
+CREATE INDEX IF NOT EXISTS idx_pitch_decks_company_name ON pitch_decks(company_name);
+CREATE INDEX IF NOT EXISTS idx_pitch_decks_created_at ON pitch_decks(created_at);
+
+-- Step 3: Insert a test record to verify everything works
+INSERT INTO pitch_decks (
+    id, 
+    pitch_deck_link, 
+    funds_list_link, 
+    company_name, 
+    description,
+    workflow_type
+) VALUES (
+    gen_random_uuid(),
+    'https://example.com/test-pitch-deck.pdf',
+    'https://example.com/test-funds-list.csv',
+    'Test Company',
+    'This is a test company for verification',
+    'test'
+) ON CONFLICT (id) DO NOTHING;
+
+-- Step 4: Verify the table was created and has data
+SELECT 
+    COUNT(*) as total_records,
+    COUNT(CASE WHEN workflow_type = 'test' THEN 1 END) as test_records
+FROM pitch_decks;
+
+-- Step 5: Show table structure
+SELECT 
+    column_name, 
+    data_type, 
+    is_nullable, 
+    column_default
+FROM information_schema.columns 
+WHERE table_name = 'pitch_decks' 
+ORDER BY ordinal_position;

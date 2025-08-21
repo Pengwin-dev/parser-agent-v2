@@ -1,0 +1,40 @@
+-- Minimal Supabase Table Creation
+-- This should work without any errors
+
+-- Create the basic table
+CREATE TABLE IF NOT EXISTS pitch_decks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    pitch_deck_link TEXT NOT NULL,
+    funds_list_link TEXT NOT NULL,
+    company_name TEXT,
+    description TEXT,
+    problem TEXT,
+    solution TEXT,
+    funding_info TEXT,
+    industry_sectors TEXT,
+    pages_processed INTEGER DEFAULT 0,
+    text_extracted_chars INTEGER DEFAULT 0,
+    total_funds INTEGER DEFAULT 0,
+    funds_data JSONB,
+    extracted_at TIMESTAMPTZ DEFAULT NOW(),
+    raw_summary JSONB,
+    status TEXT DEFAULT 'completed',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Insert test data
+INSERT INTO pitch_decks (
+    pitch_deck_link, 
+    funds_list_link, 
+    company_name, 
+    description
+) VALUES (
+    'https://example.com/test.pdf',
+    'https://example.com/test.csv',
+    'Test Company',
+    'Test Description'
+);
+
+-- Verify it worked
+SELECT 'Table created successfully!' as status, COUNT(*) as record_count FROM pitch_decks;
