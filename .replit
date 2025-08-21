@@ -1,0 +1,49 @@
+# 1. Create .replit file (tells Replit how to run your app)
+cat > .replit << 'EOF'
+run = "python -m uvicorn api:app --host 0.0.0.0 --port 8000"
+language = "python3"
+
+[nix]
+channel = "stable-22_11"
+
+[deployment]
+run = ["sh", "-c", "python -m uvicorn api:app --host 0.0.0.0 --port 8000"]
+EOF
+
+# 2. Create pyproject.toml (Python project config)
+cat > pyproject.toml << 'EOF'
+[tool.poetry]
+name = "parser-agent"
+version = "0.1.0"
+description = "AI Pitch Deck Parser for VC Workflow"
+authors = ["Your Name"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.104.1"
+uvicorn = "^0.24.0"
+python-multipart = "^0.0.6"
+python-dotenv = "^1.0.0"
+supabase = "^2.0.2"
+PyMuPDF = "^1.23.5"
+requests = "^2.31.0"
+pandas = "^2.1.1"
+nltk = "^3.8.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+EOF
+
+# 3. Update requirements.txt to make sure it's clean
+cat > requirements.txt << 'EOF'
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+python-dotenv==1.0.0
+supabase==2.0.2
+PyMuPDF==1.23.5
+requests==2.31.0
+pandas==2.1.1
+nltk==3.8.1
+EOF
