@@ -1,0 +1,11 @@
+cat > railway.toml << EOF
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "uvicorn api:app --host 0.0.0.0 --port \$PORT"
+restartPolicyType = "always"
+
+[env]
+PORT = "8000"
+EOF
